@@ -1,0 +1,14 @@
+{
+  "version": "1.0",
+  "defaultSchema": "POSTGRES",
+  "schemas": [
+    {
+      "type": "jdbc",
+      "name": "POSTGRES",
+      "jdbcDriver": "org.postgresql.Driver",
+      "jdbcUrl": "jdbc:postgresql://localhost:5432/blogdb",
+      "jdbcUser": "admin",
+      "jdbcPassword": "admin"
+    }
+  ]
+}
