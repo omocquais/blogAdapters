@@ -38,3 +38,33 @@
   ```bash
     http :8080/authors | jq
   ```
+
+# MCP Server - Model Context Protocol Java SDK
+- https://github.com/modelcontextprotocol/java-sdk
+
+## Claude Desktop MCP Server configuration
+
+  ```json
+    {
+  "mcpServers": {
+    "blog-mcp-server": {
+      "command": "java",
+      "args": [
+        "-jar",
+        "/Users/olivier/IdeaProjects/casestudy/mcp/target/mcp-0.0.1-SNAPSHOT.jar"
+      ]
+    }
+  }
+}
+  ```
+
+## Ask Questions to Claude about the Blog Data
+
+- Who are the authors of the blog?
+
+The blog has four authors:
+
+- Alice (alice@example.com)
+- Bob (bob@example.com)
+- Carla (carla@example.com)
+- Dan (dan@example.com)

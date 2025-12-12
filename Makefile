@@ -23,6 +23,11 @@ http-get-authors:
 	http :8080/authors | jq
 	@echo "HTTP requests authors completed."
 
+mcp-up:
+	@echo "Starting mcp-adapter..."
+	mvn spring-boot:run -pl mcp
+	@echo "mcp-adapter started."
+
 db-down:
 	@echo "Stopping database..."
 	docker-compose down
