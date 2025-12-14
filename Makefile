@@ -23,6 +23,11 @@ http-get-authors:
 	http :8080/authors | jq
 	@echo "HTTP requests authors completed."
 
+http-get-articles:
+	@echo "Making HTTP requests articles..."
+	http :8080/articles | jq
+	@echo "HTTP requests articles completed."
+
 mcp-up:
 	@echo "Starting mcp-adapter..."
 	mvn spring-boot:run -pl mcp

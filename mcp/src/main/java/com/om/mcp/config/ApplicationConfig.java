@@ -1,10 +1,14 @@
 package com.om.mcp.config;
 
+import com.om.engine.application.adapters.CalciteArticleRepositoryPort;
 import com.om.engine.application.adapters.CalciteAuthorRepositoryPort;
 import com.om.engine.application.adapters.CalciteConnectionProvider;
 import com.om.engine.application.adapters.CalciteConnectionProviderImpl;
+import com.om.engine.application.ports.in.ArticlesUseCase;
 import com.om.engine.application.ports.in.AuthorsUseCase;
+import com.om.engine.application.ports.out.ArticleRepositoryPort;
 import com.om.engine.application.ports.out.AuthorRepositoryPort;
+import com.om.engine.application.services.ArticleService;
 import com.om.engine.application.services.AuthorsService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -29,5 +33,17 @@ public class ApplicationConfig {
     @Bean
     public AuthorsUseCase authorsUseCase(AuthorRepositoryPort authorRepositoryPort) {
         return new AuthorsService(authorRepositoryPort);
+    }
+
+
+    @Bean
+    public ArticleRepositoryPort articleRepositoryPort(@Value("${models.config.dir}") String configDir,
+                                                       CalciteConnectionProvider calciteConnectionProvider) {
+        return new CalciteArticleRepositoryPort(Path.of(configDir, "blogdb-model.json"),  calciteConnectionProvider);
+    }
+
+    @Bean
+    public ArticlesUseCase articlesUseCase(ArticleRepositoryPort articleRepositoryPort) {
+        return new ArticleService(articleRepositoryPort);
     }
 }
