@@ -28,6 +28,11 @@ http-get-articles:
 	http :8080/articles | jq
 	@echo "HTTP requests articles completed."
 
+http-get-comments:
+	@echo "Making HTTP requests comments..."
+	http :8080/comments | jq
+	@echo "HTTP requests comments completed."
+
 mcp-up:
 	@echo "Starting mcp-adapter..."
 	mvn spring-boot:run -pl mcp
@@ -42,4 +47,3 @@ test:
 	@echo "Test..."
 	mvn test
 	@echo "Tests completed."
-

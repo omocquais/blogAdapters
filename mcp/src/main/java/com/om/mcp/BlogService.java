@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.om.engine.application.domain.Article;
 import com.om.engine.application.domain.Author;
+import com.om.engine.application.domain.Comment;
 import com.om.engine.application.ports.in.ArticlesUseCase;
 import com.om.engine.application.ports.in.AuthorsUseCase;
+import com.om.engine.application.ports.in.CommentsUseCase;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +19,13 @@ public class BlogService {
 
     private final AuthorsUseCase authorsUseCase;
     private final ArticlesUseCase articlesUseCase;
+    private final CommentsUseCase commentsUseCase;
 
-    public BlogService(AuthorsUseCase authorsUseCase, ArticlesUseCase articlesUseCase) {
+    public BlogService(AuthorsUseCase authorsUseCase, ArticlesUseCase articlesUseCase, CommentsUseCase commentsUseCase) {
         this.authorsUseCase = authorsUseCase;
         this.articlesUseCase = articlesUseCase;
+        this.commentsUseCase = commentsUseCase;
     }
-
 
     @Tool(name = "getAuthors", description = "Get the full list of authors contributing to this blog")
     public String getAuthors() {
@@ -50,6 +53,18 @@ public class BlogService {
     public String getUnpublishedArticles() {
         try {
             List<Article> articles = articlesUseCase.getUnpublishedArticles().stream().toList();
+            JsonMapper jsonMapper = new JsonMapper();
+            jsonMapper.registerModule(new JavaTimeModule());
+            return jsonMapper.writeValueAsString(articles);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Tool(name = "getComments", description = "Get the full list of comments to this blog")
+    public String getComments() {
+        try {
+            List<Comment> articles = commentsUseCase.getComments().stream().toList();
             JsonMapper jsonMapper = new JsonMapper();
             jsonMapper.registerModule(new JavaTimeModule());
             return jsonMapper.writeValueAsString(articles);
