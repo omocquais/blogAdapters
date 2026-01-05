@@ -1,6 +1,7 @@
 package com.om.engine.application.adapters;
 
 import com.om.engine.application.domain.Article;
+import com.om.engine.application.services.TechnicalException;
 import org.apache.calcite.jdbc.CalciteConnection;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import java.util.UUID;
 import static com.om.engine.application.adapters.CalciteArticleRepositoryPort.SQL_SELECT_PUBLISHED_ARTICLES;
 import static com.om.engine.application.adapters.CalciteArticleRepositoryPort.SQL_SELECT_UNPUBLISHED_ARTICLES;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -157,6 +159,17 @@ class CalciteArticleRepositoryPortTest {
                                 "content", null, false, UUID.fromString("8f7488c4-a1ba" +
                                 "-4640-818a-0e3f09f42ac9"))
                 );
+    }
+    
+    @DisplayName("When retrieving a list of articles, a SQLException occurs, which results in a TechnicalException being thrown.")
+    @Test
+    void findAllArticlesWithSQLException(@TempDir Path tempDirPath) throws SQLException {
+        //Given
+        when(calciteConnectionProvider.getConnection(tempDirPath)).thenThrow(SQLException.class);
+
+        // When
+        CalciteArticleRepositoryPort articleRepositoryPort = new CalciteArticleRepositoryPort(tempDirPath, calciteConnectionProvider);
+        assertThatThrownBy(articleRepositoryPort::findAll).isInstanceOf(TechnicalException.class).hasMessageContaining("Error retrieving articles");
     }
 
 }

@@ -1,6 +1,7 @@
 package com.om.engine.application.adapters;
 
 import com.om.engine.application.domain.Comment;
+import com.om.engine.application.services.TechnicalException;
 import org.apache.calcite.jdbc.CalciteConnection;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import java.util.UUID;
 
 import static com.om.engine.application.adapters.CalciteCommentRepositoryPort.SQL_SELECT_COMMENTS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -78,4 +80,16 @@ class CalciteCommentRepositoryPortTest {
                                 "Comment 2 content", timestamp2.toLocalDateTime(), UUID.fromString("a3361293-6d7d-4537-8c77-d4120e9ba01a"))
                 );
     }
+
+    @DisplayName("When retrieving a list of comments, a SQLException occurs, which results in a TechnicalException being thrown.")
+    @Test
+    void findAllArticlesWithSQLException(@TempDir Path tempDirPath) throws SQLException {
+        //Given
+        when(calciteConnectionProvider.getConnection(tempDirPath)).thenThrow(SQLException.class);
+
+        // When
+        CalciteCommentRepositoryPort commentRepositoryPort = new CalciteCommentRepositoryPort(tempDirPath, calciteConnectionProvider);
+        assertThatThrownBy(commentRepositoryPort::findAll).isInstanceOf(TechnicalException.class).hasMessageContaining("Error retrieving comments");
+    }
+
 }

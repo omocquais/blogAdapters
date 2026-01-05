@@ -1,6 +1,7 @@
 package com.om.engine.application.adapters;
 
 import com.om.engine.application.domain.Author;
+import com.om.engine.application.services.TechnicalException;
 import org.apache.calcite.jdbc.CalciteConnection;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -62,6 +64,17 @@ class CalciteAuthorRepositoryPortTest {
                 .containsExactly(
                         new Author(UUID.fromString("40e6215d-b5c6-4896-987c-f30f3678f608"), "alice", "alice@example.com"),
                         new Author(UUID.fromString("6ecd8c99-4036-403d-bf84-cf8400f67836"), "bob", "bob@example.com"));
+    }
+
+    @DisplayName("When retrieving a list of authors, a SQLException occurs, which results in a TechnicalException being thrown.")
+    @Test
+    void findAllArticlesWithSQLException(@TempDir Path tempDirPath) throws SQLException {
+        //Given
+        when(calciteConnectionProvider.getConnection(tempDirPath)).thenThrow(SQLException.class);
+
+        // When
+        CalciteAuthorRepositoryPort authorRepositoryPort = new CalciteAuthorRepositoryPort(tempDirPath, calciteConnectionProvider);
+        assertThatThrownBy(authorRepositoryPort::findAll).isInstanceOf(TechnicalException.class).hasMessageContaining("Error retrieving authors");
     }
 
 }
