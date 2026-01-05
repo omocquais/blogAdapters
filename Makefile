@@ -33,11 +33,6 @@ http-get-comments:
 	http :8080/comments | jq
 	@echo "HTTP requests comments completed."
 
-mcp-up:
-	@echo "Starting mcp-adapter..."
-	mvn spring-boot:run -pl mcp
-	@echo "mcp-adapter started."
-
 db-down:
 	@echo "Stopping database..."
 	docker-compose down
