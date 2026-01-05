@@ -17,10 +17,5 @@ spring:
 logging:
   pattern:
     console:
-  file:
-    name: /Users/olivier/IdeaProjects/casestudy/logs/mcp-blog-stdio-server.log
-models:
-  config:
-    dir: /Users/olivier/IdeaProjects/casestudy/http/src/main/config/
 server:
   port: 8081

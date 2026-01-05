@@ -57,13 +57,17 @@
 ## MCP Server - Model Context Protocol Java SDK
 - https://github.com/modelcontextprotocol/java-sdk
 
-### Claude Desktop MCP Server configuration
+### Claude Desktop MCP Server configuration ( claude_desktop_config.json )
 
   ```json
 {
   "mcpServers": {
     "blog-mcp-server": {
       "command": "/Users/olivier/.sdkman/candidates/java/current/bin/java",
+      "env": {
+        "MODELS_CONFIG_DIR": "/Users/olivier/IdeaProjects/casestudy/http/src/main/config/",
+        "LOGGING_PATTERN_CONSOLE_FILE_NAME": "/Users/olivier/IdeaProjects/casestudy/logs/mcp-blog-stdio-server.log"
+      },
       "args": [
         "-jar",
         "/Users/olivier/IdeaProjects/casestudy/mcp/target/mcp-0.0.1-SNAPSHOT.jar"
