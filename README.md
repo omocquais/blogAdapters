@@ -65,8 +65,7 @@
     "blog-mcp-server": {
       "command": "/Users/olivier/.sdkman/candidates/java/current/bin/java",
       "env": {
-        "MODELS_CONFIG_DIR": "/Users/olivier/IdeaProjects/casestudy/http/src/main/config/",
-        "LOGGING_PATTERN_CONSOLE_FILE_NAME": "/Users/olivier/IdeaProjects/casestudy/logs/mcp-blog-stdio-server.log"
+        "MODELS_CONFIG_DIR": "/Users/olivier/IdeaProjects/casestudy/http/src/main/config/"
       },
       "args": [
         "-jar",
@@ -76,6 +75,9 @@
   }
 }
   ```
+
+- The `MODELS_CONFIG_DIR` environment variable defines the directory that contains configuration file for the Apache 
+Calcite JDBC adapter
 
 ### Ask Questions to Claude about the Blog Data
 
