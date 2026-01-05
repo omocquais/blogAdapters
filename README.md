@@ -1,63 +1,107 @@
-# HTTP and MCP adapters for a Blog Case Study
+# Blog Case Study: HTTP and MCP Adapters
+
+This repository contains HTTP and MCP adapters built as part of a blog-oriented case study. The project demonstrates how to expose blog-related data (authors, articles, and comments) through a Spring Boot–based HTTP API, backed by a PostgreSQL database.
+
+## Overview
+
+The project showcases:
+
+- A Spring Boot–based HTTP adapter exposing REST endpoints
+- An MCP server that enables natural-language querying of blog data
+- A PostgreSQL database initialized with schema and seed data
+- Integration with Apache Calcite for SQL parsing and query planning
 
 ## Prerequisites
 
+Ensure the following tools are installed before getting started:
+
 - Maven 3
-- Java 25 
-- Docker & Docker Compose (to run PostgreSQL database)
-- JQ (testing JSON output in terminal)
-- HTTPie (testing HTTP APIs)
+- Java 25
+- Docker and Docker Compose (for running the PostgreSQL database)
+- jq (for formatting and inspecting JSON output in the terminal)
+- HTTPie (for testing HTTP APIs)
+- Claude Desktop (to interact with MCP server)
+- MCP Inspector (for inspecting MCP interactions) 
 
-## Frameworks and Libraries used in this project
+## Technology Stack
 
-- TestContainers
-- Spring Boot 4
-- Apache Calcite
-- JUnit 5
-- Mockito
+The project is built using the following frameworks and libraries:
+
+- Spring Boot 4 – application framework for building and running the service
+- Apache Calcite – SQL parsing and query planning
+- Testcontainers – managing containerized dependencies during tests
+- JUnit 5 – unit and integration testing
+- Mockito – mocking and behavior verification in tests
 
 ## Getting Started
 
-- Build the project
+Follow the steps below to build and run the project locally.
+
+### Build the project
+
+- Build the project using Maven and run all tests
 
   ```bash
-	mvn install
+  mvn install
   ```
 
-- Start the database - PostgreSQL with initial schema and data
+### Start the database
+
+- Launch a PostgreSQL instance with the initial schema and seed data:
 
   ```bash
-	docker-compose up
+  docker-compose up
   ```
 
-- Start the Spring boot application (HTTP adapter server) - Jetty
+### Run the HTTP Adapter
+
+- Start the Spring Boot application (HTTP adapter) using Jetty:
 
   ```bash
-    mvn spring-boot:run -pl http
+  mvn spring-boot:run -pl http
   ```
-                                                                 
-- Test the API using HTTPie to get authors
+
+The application will be available on port 8080.
+
+### Test the HTTP API
+
+You can use HTTPie together with jq to query and inspect the API responses.
+
+#### Retrieve authors
 
   ```bash
     http :8080/authors | jq
   ```
 
-- Test the API using HTTPie to get articles
+#### Retrieve articles
 
   ```bash
     http :8080/articles | jq
   ```
 
-- Test the API using HTTPie to get comments
+#### Retrieve comments
 
   ```bash
     http :8080/comments | jq
   ```
 
-## MCP Server - Model Context Protocol Java SDK
+### Notes
+
+- Ensure Docker is running before starting the database.
+- The HTTP adapter must be running for the API endpoints to be accessible.
+- MCP-related tools (Claude Desktop and MCP Inspector) are required only when interacting with the MCP server 
+  components.
+
+## MCP Server
+
+This project includes an MCP server built using the Model Context Protocol Java SDK 
 - https://github.com/modelcontextprotocol/java-sdk
 
-### Claude Desktop MCP Server configuration ( claude_desktop_config.json )
+The MCP server allows LLMs (such as Claude Desktop) to query blog data using natural language.
+
+### Claude Desktop Configuration
+
+To register the MCP server with Claude Desktop, update your `claude_desktop_config.json` file as shown below:
 
   ```json
 {
@@ -76,10 +120,14 @@
 }
   ```
 
-- The `MODELS_CONFIG_DIR` environment variable defines the directory that contains configuration file for the Apache 
-Calcite JDBC adapter
+#### Configuration Notes
 
-### Ask Questions to Claude about the Blog Data
+- `MODELS_CONFIG_DIR` specifies the directory containing the Apache Calcite JDBC adapter configuration.
+- Paths should be adjusted to match your local environment.
+
+### Example Queries with Claude
+
+Once the MCP server is running and connected to Claude Desktop, you can ask questions such as:
 
 #### Retrieve a complete list of all authors who contribute to this blog
 
@@ -163,3 +211,14 @@ I'll retrieve the complete list of comments on published blog articles.Here's th
 - Comments on published articles: 4
 - Comments on unpublished articles: 2 (on Bob's draft article)
 - Note: There are no comments yet on the "How Blockchain Works" article by Carla.
+
+         
+# MCP Inspector
+
+To launch the MCP Inspector locally:
+
+  ```bash
+    npx @modelcontextprotocol/inspector
+  ```
+
+This tool helps inspect MCP traffic and validate server behavior during development.
